@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
+
+<body>
+
+
+<h2>Owner Information</h2>
+
+
+<table class="table table-striped" th:object="${owner}">
+    <tr>
+        <th>Name</th>
+        <td><b th:text="*{firstName + ' ' + lastName}"></b></td>
+    </tr>
+    <tr>
+        <th>Address</th>
+        <td th:text="*{address}"></td>
+    </tr>
+    <tr>
+        <th>City</th>
+        <td th:text="*{city}"></td>
+    </tr>
+    <tr>
+        <th>Telephone</th>
+        <td th:text="*{telephone}"></td>
+    </tr>
+</table>
+
+<a th:href="@{{id}/edit(id=${owner.id})}" class="btn btn-default">Edit
+    Owner</a>
+<a th:href="@{{id}/cars/new(id=${owner.id})}" class="btn btn-default">Add
+    New Car</a>
+
+<br/>
+<br/>
+<br/>
+<h2>Cars and Visits</h2>
+
+<table class="table table-striped">
+
+    <tr th:each="car : ${owner.getCars()}">
+        <td valign="top">
+            <dl class="dl-horizontal">
+                <dt>Name</dt>
+                <dd th:text="${car.name}"></dd>
+                <dt>Manufactured Date</dt>
+                <dd
+                        th:text="${#temporals.format(car.getManufacturedDate(), 'yyyy-MM-dd')}"></dd>
+                <dt>Type</dt>
+                <dd th:text="${car.type}"></dd>
+            </dl>
+        </td>
+        <td valign="top">
+            <table class="table-condensed">
+                <thead>
+                <tr>
+                    <th>Visit Date</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tr th:each="visit : ${car.visits}">
+                    <td th:text="${#temporals.format(visit.visitDate, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${visit?.description}"></td>
+                </tr>
+                <tr>
+                    <td><a
+                            th:href="@{{ownerId}/cars/{carId}/edit(ownerId=${owner.id},carId=${car.id})}">Edit
+                        Car</a></td>
+                    <td><a
+                            th:href="@{{ownerId}/cars/{carId}/visits/new(ownerId=${owner.id},carId=${car.id})}">Add
+                        Visit</a></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+</table>
+
+</body>
+
+</html>
